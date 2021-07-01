@@ -35,10 +35,11 @@ ahpscale_lvl3_12 <- data.frame(read_excel("SummaryAhpScale.xlsx", sheet = "Level
 #problem 1. Cannot work on less than 3 criteria
 
 
-ahpscale_lvl2_1 <- data.frame(read_excel("SummaryAhpScale.xlsx", sheet = "Level2_Econ"))
+ahpscale_lvl2_1Test <- data.frame(read_excel("SummaryAhpScale.xlsx", sheet = "Level2_EconTest"))
 
-MatrixChck01<-ahp.mat(ahpscale_lvl2_1, atts = c("Capex", "Opex"), negconvert = TRUE)
-eigenmean_lvl2_1 <- ahp(df = ahpscale_lvl2_1,
+MatrixChck01<-ahp.mat(ahpscale_lvl2_1Test, atts = c("Capex", "Opex","empty"), negconvert = TRUE)
+MatrixChck01
+eigenmean_lvl2_1 <- ahp(df = ahpscale_lvl2_1Test,
                       atts = c("Capex", "Opex","empty"), ##test only ## need changes as R AHP lib need more than 3 or more criteria
                       negconvert = TRUE,
                       reciprocal = TRUE,
