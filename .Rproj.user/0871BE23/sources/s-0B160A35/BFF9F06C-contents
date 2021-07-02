@@ -4,7 +4,7 @@ library(readxl)
 library(magrittr)
 library(dplyr)
 data(city200)
-
+options(error=recover)
 
 
 ahpscale_lvl1 <- data.frame(read_excel("SummaryAhpScale.xlsx", sheet = "Level1"))
@@ -34,31 +34,55 @@ ahpscale_lvl3_12 <- data.frame(read_excel("SummaryAhpScale.xlsx", sheet = "Level
 #Uncomment to use
 #problem 1. Cannot work on less than 3 criteria
 
+#
+# ahpscale_lvl2_1Test <- data.frame(read_excel("SummaryAhpScale.xlsx", sheet = "Level2_EconTest"))
+#
+# MatrixChck01<-ahp.mat(ahpscale_lvl2_1Test, atts = c("Capex", "Opex","empty"), negconvert = TRUE)
+# MatrixChck01
+# eigenmean_lvl2_1 <- ahp(df = ahpscale_lvl2_1Test,
+#                       atts = c("Capex", "Opex","empty"), ##test only ## need changes as R AHP lib need more than 3 or more criteria
+#                       negconvert = TRUE,
+#                       reciprocal = TRUE,
+#                       method = "eigen",
+#                       aggmethod = "arithmetic",
+#                       qt = 0.2,
+#                       censorcr = 0.37,
+#                       agg = TRUE)
+#
+# head(eigenmean_lvl2_1$indpref)
 
-ahpscale_lvl2_1Test <- data.frame(read_excel("SummaryAhpScale.xlsx", sheet = "Level2_EconTest"))
 
-MatrixChck01<-ahp.mat(ahpscale_lvl2_1Test, atts = c("Capex", "Opex","empty"), negconvert = TRUE)
-MatrixChck01
-eigenmean_lvl2_1 <- ahp(df = ahpscale_lvl2_1Test,
-                      atts = c("Capex", "Opex","empty"), ##test only ## need changes as R AHP lib need more than 3 or more criteria
-                      negconvert = TRUE,
-                      reciprocal = TRUE,
-                      method = "eigen",
-                      aggmethod = "arithmetic",
-                      qt = 0.2,
-                      censorcr = 0.37,
-                      agg = TRUE)
 
-head(eigenmean_lvl2_1$indpref)
+
+ahpscale_lvl2_1 <- data.frame(read_excel("SummaryAhpScale.xlsx", sheet = "Level2_EconTest"))
+MatrixChck01<-ahp.mat(ahpscale_lvl2_1, atts = c("Capex", "Opex"), negconvert = TRUE)
+B=(matrix(unlist(MatrixChck01), nrow=2, ncol=2,  byrow=TRUE))
+A= eigen(B)
+eB = matrix((A$vectors[,1]),nrow=2, ncol=1, byrow= TRUE)
+eigenmean_lvl2_1= eB/sum(eB)
+
+
+# eigenmean_lvl2_1 <- ahp(df = ahpscale_lvl2_1Test,
+#                         atts = c("Capex", "Opex",), ##test only ## need changes as R AHP lib need more than 3 or more criteria
+#                         negconvert = TRUE,
+#                         reciprocal = TRUE,
+#                         method = "eigen",
+#                         aggmethod = "arithmetic",
+#                         qt = 0.2,
+#                         censorcr = 0.37,
+#                         agg = TRUE)
+#
+# head(eigenmean_lvl2_1$indpref)
 
 
 
 #################################################################################################################################################
 #################################################################################################################################################
-
 
 #########################            Eigenvalue calculation AREA      ###########################################################################
 
+#################################################################################################################################################
+#################################################################################################################################################
 
 
 eigenmean_lvl1 <- ahp(df = ahpscale_lvl1,
@@ -67,42 +91,29 @@ eigenmean_lvl1 <- ahp(df = ahpscale_lvl1,
                       reciprocal = TRUE,
                       method = "eigen",
                       aggmethod = "arithmetic",
-                      qt = 0.2,
+                      qt = 0.1,
                       censorcr = 0.37,
                       agg = TRUE)
 
 head(eigenmean_lvl1$indpref)
 
 
-eigenmean_lvl2_1 <- ahp(df = ahpscale_lvl2_1,
-                        atts = c("Capex", "Opex"), ##test only ## need changes as R AHP lib need more than 3 or more criteria
-                        negconvert = TRUE,
-                        reciprocal = TRUE,
-                        method = "eigen",
-                        aggmethod = "arithmetic",
-                        qt = 0.2,
-                        censorcr = 0.37,
-                        agg = TRUE)
 
-head(eigenmean_lvl2_1$indpref)
+MatrixChck01<-ahp.mat(ahpscale_lvl2_1, atts = c("Capex", "Opex"), negconvert = TRUE)
+B=(matrix(unlist(MatrixChck01), nrow=2, ncol=2,  byrow=TRUE))
+A= eigen(B)
+eB = matrix((A$vectors[,1]),nrow=2, ncol=1, byrow= TRUE)
+eigenmean_lvl2_1= eB/sum(eB)
+eigenmean_lvl2_1
 
 
+MatrixChck02<-ahp.mat(ahpscale_lvl2_2, atts = c("Existing Infrastructure", "Spectrum Availability"), negconvert = TRUE)
+B=(matrix(unlist(MatrixChck02), nrow=2, ncol=2,  byrow=TRUE))
+A= eigen(B)
+eB = matrix((A$vectors[,1]),nrow=2, ncol=1, byrow= TRUE)
+eigenmean_lvl2_2= eB/sum(eB)
+eigenmean_lvl2_2
 
-
-
-MatrixChck<-ahp.mat(ahpscale_lvl2_2, atts = c("Existing Infrastructure", "Spectrum Availability"), negconvert = TRUE)
-MatrixChck
-eigenmean_lvl2_2 <- ahp(df = ahpscale_lvl2_2,
-                       atts =  c("Existing Infrastructure", "Spectrum Availability"),
-                       negconvert = TRUE,
-                       reciprocal = TRUE,
-                       method = "eigen",
-                       aggmethod = "arithmetic",
-                       qt = 0.2,
-                       censorcr = 0.37,
-                       agg = TRUE)
-
-head(eigenmean_lvl2_2$indpref)
 
 eigenmean_lvl2_3 <- ahp(df = ahpscale_lvl2_3,
                         atts =  c("Installation Complexity", "Maintenance ", "Security"),
@@ -276,7 +287,13 @@ eigenmean_lvl3_12 <- ahp(df = ahpscale_lvl3_12,
 head(eigenmean_lvl3_12$indpref)
 
 
+#################################################################################################################################################
+#################################################################################################################################################
 
+#########################            Global Priorities calculation AREA      ###########################################################################
+
+#################################################################################################################################################
+#################################################################################################################################################
 
 
 
